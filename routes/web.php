@@ -48,3 +48,5 @@ Route::get('/main/store', function() {
 
 Route::get('/checklist', [CheckListController::class, 'index']);
 Route::get('/checklist/show-checklist', [CheckListController::class, 'show']);
+
+Route::get('/checklist/show-checklist', [CheckListController::class, 'show']);
