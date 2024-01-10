@@ -9,6 +9,14 @@
             <input type="text" name="test1" v-model="formData.test1">
             <button type="submit">Save</button>
         </form>
+
+        <form @submit.prevent="subupdate">
+            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+            <input type="text" name="id" v-model="formUpData.id">
+            <input type="text" name="test" v-model="formUpData.test">
+            <input type="text" name="test1" v-model="formUpData.test1">
+            <button type="submit">update</button>
+        </form>
         
         <!-- <ul>
             <li v-for="(item, index) in maindata" :key="index">
@@ -27,7 +35,13 @@ export default {
                 test: '',
                 test1: ''
             },
-            maindata: []
+            formUpData: {
+                id: '',
+                test: '',
+                test1: ''
+            },
+            maindata: [],
+            mainupdate: []
         };
     },
     mounted() {
@@ -39,6 +53,14 @@ export default {
             axios.post('main/store', this.formData)
             .then(response => {
                 location.reload();
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        subupdate() {
+            axios.post('main/update', this.formUpData)
+            .then(response => {
+                console.log(response)
             }).catch((error) => {
                 console.log(error);
             })

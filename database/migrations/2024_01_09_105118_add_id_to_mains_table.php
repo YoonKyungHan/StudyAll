@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('mains', function (Blueprint $table) {
-            $table->string('new_column_name')->nullable(); // 예시: 새로운 문자열 타입의 컬럼 추가
+            $table->id(); // 기본 키인 'id' 컬럼 추가
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('mains', function (Blueprint $table) {
-            $table->dropColumn('new_column_name'); // 롤백을 위한 컬럼 제거
+            $table->dropColumn('id');
         });
     }
 };
