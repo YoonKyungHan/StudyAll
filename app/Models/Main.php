@@ -15,9 +15,10 @@ class Main extends Model
         return self::create($data);
     }
 
-    public function updateData($data)
+    public function customUpdate($data)
     {
         $this->update($data);
         return $this;
     }
+    
 }

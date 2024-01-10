@@ -17,7 +17,13 @@
             <input type="text" name="test1" v-model="formUpData.test1">
             <button type="submit">update</button>
         </form>
-        
+
+        <form @submit.prevent="subdelete">
+            <input type="hidden" name="_token" value="<?php echo csrf_token(); ?>">
+            <input type="text" name="id" v-model="formDelete.id">
+            <button type="submit">deletes</button>
+        </form>
+        {{ formDelete.id }}
         <!-- <ul>
             <li v-for="(item, index) in maindata" :key="index">
                 <p>list{{  }} Test: {{ item.test }} Test1: {{ item.test1 }}</p>
@@ -28,6 +34,7 @@
 </template>
 <script>
 import axios from 'axios';
+
 export default {
     data() {
         return {
@@ -40,8 +47,12 @@ export default {
                 test: '',
                 test1: ''
             },
+            formDelete: {
+                id: ''
+            },
             maindata: [],
-            mainupdate: []
+            mainupdate: [],
+            maindelete: []
         };
     },
     mounted() {
@@ -57,10 +68,20 @@ export default {
                 console.log(error);
             })
         },
-        subupdate() {
+        subupdate(evnet) {
             axios.post('main/update', this.formUpData)
             .then(response => {
-                console.log(response)
+                evnet.target.id.value = "";
+                evnet.target.test.value = "";
+                evnet.target.test1.value = "";
+            }).catch((error) => {
+                console.log(error);
+            })
+        },
+        subdelete() {
+            axios.delete(`/main/deletes/${this.formDelete.id}`)
+            .then(response => {
+                console.log(response.data);
             }).catch((error) => {
                 console.log(error);
             })

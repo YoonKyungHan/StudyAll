@@ -3,7 +3,6 @@
         <ul>
             <li v-for="(item, index) in maindate" :key="index">{{ `${index} = ${item.test} : ${item.test1}` }}</li>
         </ul>
-        {{  }}
     </div>
 </template>
 <script>
@@ -16,7 +15,7 @@
             }
         },
         mounted(){
-            this.fetchData();
+            this.fetchData();    
         },
         created() {
             const pusher = new Pusher('4639141d81a5abb6add7', {
@@ -27,7 +26,8 @@
             const channel = pusher.subscribe('channel-name');
 
             channel.bind('new-data', (data) => {
-                console.log(data);
+                //console.log(data.data.original);
+                this.maindate = data.data.original;
             });
         },
         methods:{

@@ -1,10 +1,9 @@
 <?php
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AdminRegistrationController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\mainController;
-use App\Http\Controllers\CheckListController;
-use App\Events\MainStoreEvent;
 use Inertia\Inertia;
 
 /*
@@ -19,34 +18,44 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('trash/Welcome', [
+    return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
-
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return Inertia::render('trash/Dashboard');
-    })->name('dashboard');
+Route::get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/main', [mainController::class, 'index']);
-Route::post('/main/store', [mainController::class, 'store']);
-Route::get('/main/show-main', [mainController::class, 'show']);
+require __DIR__.'/auth.php';
 
-Route::get('/main/store', function() {
-    event(new MainStoreEvent(''));
+
+// Route::get('/main', [mainController::class, 'index']);
+// Route::post('/main/store', [mainController::class, 'store']);
+// Route::get('/main/show-main', [mainController::class, 'show']);
+
+// Route::get('/main/store', function() {
+//     event(new MainStoreEvent(''));
+// });
+
+// Route::post('/main/update', [mainController::class, 'update']);
+
+// Route::get('/checklist', [CheckListController::class, 'index']);
+// Route::get('/checklist/show-checklist', [CheckListController::class, 'show']);
+
+Route::middleware('guest')->group(function (){
+    Route::get('/RegisterAdmin', [AdminRegistrationController::class, 'index'])->name('RegisterAdmin.index');
+
+    //Route::post('/RegisterAdmin/store', [AdminRegistrationController::class, 'store']);
 });
 
-Route::post('/main/update', [mainController::class, 'update']);
-
-Route::get('/checklist', [CheckListController::class, 'index']);
-Route::get('/checklist/show-checklist', [CheckListController::class, 'show']);
+Route::post('/registerAdmin/store', [AdminRegistrationController::class, 'store']);
